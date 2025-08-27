@@ -1,112 +1,63 @@
-Multi-Container App (Flask + PostgreSQL)
+# Multi-Container App with GitHub Actions CI/CD 🚀
 
-This project is a beginner-friendly DevOps application that demonstrates how to containerize and orchestrate a simple Python web service with a PostgreSQL database using Docker Compose.
+This project showcases a multi-container web application using **Flask**, **PostgreSQL**, and **Redis**, orchestrated with **Docker Compose**. The entire CI/CD pipeline is automated using a **GitHub-only workflow**, demonstrating a modern, cloud-native DevOps approach without needing a local machine.
 
-It also includes CI/CD with GitHub Actions to validate Docker builds automatically.
+## Features ✨
 
-🚀 Project Overview
+  * **Three-tier architecture**: A **Python Flask** backend, a **PostgreSQL** database, and a **Redis** cache.
+  * **Containerization**: Each service runs in its own Docker container, ensuring isolation and portability.
+  * **Docker Compose**: A single `docker-compose.yml` file defines and manages the entire application stack.
+  * **GitHub Actions**: A CI pipeline automatically builds and tests the application on every push and pull request to the `main` branch.
 
-Backend: A Python Flask API with two endpoints:
+## Getting Started 💻
 
-/health → reports service status
+This project is designed to be built and run on GitHub. You don't need to clone the repository to your local machine to see it in action. The **GitHub Actions workflow** handles everything automatically.
 
-/db → connects to PostgreSQL and verifies database access
+### Project Structure
 
-Database: PostgreSQL with persistent storage
-
-Orchestration: Docker Compose manages multi-container networking
-
-CI/CD: GitHub Actions workflow builds and tests the project automatically on each push
-
-🗂 Repository Structure
+```
 multi-container-app/
-├─ Backend/             # Flask backend service
+├─ backend/
 │  ├─ app.py
 │  ├─ requirements.txt
 │  └─ Dockerfile
-├─ docker-compose.yml   # Service orchestration (Flask + Postgres)
-├─ .gitignore           # Ignore unnecessary files
-└─ README.md            # Project documentation
+├─ db/
+│  └─ init.sql
+├─ .github/
+│  └─ workflows/
+│     └─ ci.yml
+├─ docker-compose.yml
+├─ .gitignore
+└─ README.md
+```
 
-⚙️ Prerequisites
+### Services
 
-Before running locally, install:
+  * **`backend`**: A Flask application that connects to both PostgreSQL and Redis. It includes endpoints to check the database for seeded messages and to track hits using the Redis cache.
+  * **`db`**: A PostgreSQL database instance that is seeded with initial data from `db/init.sql`.
+  * **`redis`**: A Redis cache instance used for a simple hit counter.
 
-Docker Desktop
+## GitHub Actions CI/CD Pipeline 🚦
 
-Git
+The `.github/workflows/ci.yml` file defines the CI/CD pipeline, which automatically runs whenever code is pushed to or a pull request is made against the `main` branch.
 
-(Optional) GitHub Desktop
- for repo management
+**The pipeline performs the following steps:**
 
-▶️ How to Run Locally
+1.  **Checkout repo**: Checks out the repository code.
+2.  **Set up Docker Buildx**: Configures a Docker build environment.
+3.  **Build containers**: Builds the `backend` container and pulls the `postgres` and `redis` images.
+4.  **Run containers**: Starts all three containers in the background.
+5.  **Wait for services**: Pauses briefly to ensure all services are up and running.
+6.  **Test Flask health endpoint**: Uses `curl` to verify that the Flask backend is healthy and responding. This serves as a basic integration test.
 
-Clone the repo:
+You can monitor the workflow runs by navigating to the **Actions** tab in the repository.
 
-git clone https://github.com/<your-username>/multi-container-app.git
-cd multi-container-app
+## Technologies Used 🛠️
 
-
-Start the containers:
-
-docker compose up --build
-
-
-Access the app:
-
-Backend health: http://localhost:5000/health
-
-{"status": "healthy"}
-
-
-Database test: http://localhost:5000/db
-
-Stop everything:
-
-docker compose down -v
-
-🧪 CI/CD Pipeline
-
-This repo uses GitHub Actions for CI/CD:
-
-On each push, the workflow builds the Docker images and runs Compose
-
-Ensures Dockerfiles and service orchestration remain valid
-
-Workflow file is stored in:
-
-.github/workflows/ci.yml
-
-🎯 Learning Goals
-
-This project is designed to build core DevOps skills:
-
-Dockerfile authoring
-
-Multi-container orchestration with Docker Compose
-
-Container networking and environment variables
-
-Database initialization in containers
-
-GitHub Actions for CI/CD pipelines
-
-Repository structuring & documentation best practices
-
-📝 Next Steps
-
-Add migrations with Flask-Migrate to manage DB schema
-
-Add a frontend (React/Next.js) for a full-stack example
-
-Deploy to a cloud provider (Azure, AWS, or GCP)
-
-📚 References
-
-Flask Documentation
-
-PostgreSQL Documentation
-
-Docker Compose Docs
-
-GitHub Actions Docs
+  * **Python 3.10**: The language for the backend application.
+  * **Flask**: A lightweight Python web framework.
+  * **psycopg2-binary**: Python adapter for PostgreSQL.
+  * **redis-py**: Python client for Redis.
+  * **Docker**: Containerization platform.
+  * **Docker Compose**: Tool for defining and running multi-container Docker applications.
+  * **GitHub Actions**: CI/CD platform.
